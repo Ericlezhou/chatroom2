@@ -1,0 +1,137 @@
+package com.chat.util;
+
+import java.io.StringReader;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+public class XMLUtil
+{
+	/*
+	 * 客户端登陆时向服务端发送的XML数据
+	 */
+	
+	
+	//构建xml文件中相同的xml部分（根节点元素），并返回xml文档
+	public static Document constructDocument()
+	{
+		Element root = DocumentHelper.createElement("message");
+		Document document = DocumentHelper.createDocument(root);
+		return document;
+	}
+	
+	//构建包含登录信息（用户名）的xml文档，并以字符串的形式返回
+	public static String constructLoginXML(String username)
+	{
+		Document document = constructDocument();
+		
+		Element root = document.getRootElement();
+				
+		root.addElement("type").setText("1");
+		
+		root.addElement("user").setText(username);
+		
+		return document.asXML();   //document.asXML()返回了xml文件内容的字符串形式
+		
+	}
+	
+	//从字符串形式的xml文档中提取登录信息（用户名）
+	public static String extractUsername(String xml)
+	{
+		try
+		{
+			SAXReader saxReader = new SAXReader();
+			
+			Document document = saxReader.read(new StringReader(xml));
+			
+			Element root = document.getRootElement();
+			
+			return root.element("user").getText();
+		}
+		catch (DocumentException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	//构建一个是否登陆成功的xml文档，并以字符串返回
+	
+	public static String constructIsLoginResultXML(String isLoginResult)
+	{
+		Document document = constructDocument();
+		
+		Element root = document.getRootElement();
+		
+		root.addElement("type").setText("2");
+		
+		root.addElement("result").setText(isLoginResult);
+		
+		return document.asXML();
+		
+	}
+	//从字符串形式的xml文档中提取登录成功失败信息
+	public static String extractIsLoginResult(String xml)
+	{
+		SAXReader saxReader = new SAXReader();
+		
+		try
+		{
+			Document document = saxReader.read(new StringReader(xml));
+			
+			Element root = document.getRootElement();
+			
+			return root.element("result").getText();
+			
+		}
+		catch (DocumentException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//构建服务端向客户端发送的用户列表信息的xml字符串
+	
+	public static String constructUserListXML(Set<String> userset)
+	{
+		Document document = XMLUtil.constructDocument();
+		
+		Element root = document.getRootElement();
+		
+		root.addElement("type").setText("3");
+		
+		for(String user : userset)
+		{
+			root.addElement(user).setText(user);
+		}
+		return document.asXML();
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
