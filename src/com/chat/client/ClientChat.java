@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.OutputStream;
-import java.net.Socket;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,10 +18,12 @@ import javax.swing.JTextField;
 
 import com.chat.util.CharacterUtil;
 
+@SuppressWarnings("serial")
 public class ClientChat extends JFrame
 {
 
 	private String title;
+	private ClientConnectionThread clientConnectionThread;
 	private JPanel jPanel1;
 	private JPanel jPanel2;
 	private JPanel jPanel3;
@@ -39,17 +39,14 @@ public class ClientChat extends JFrame
 	private JButton jButton1;
 	private JButton jButton2;
 
-
-	public ClientChat(String title) throws Exception
+	public ClientChat(ClientConnectionThread clientConnectionThread) throws Exception
 	{
-		super(title);
-		this.title = title;
+		this.clientConnectionThread = clientConnectionThread;
 		initComponents();
 	}
 
 	public void updateUserList(String usersList)
 	{
-		this.jTextArea2.setText("");
 		this.jTextArea2.setText(usersList);
 	}
 
@@ -63,6 +60,9 @@ public class ClientChat extends JFrame
 
 	private void initComponents() throws Exception
 	{
+		this.title = clientConnectionThread.getUserName();
+		this.setTitle(title);
+
 		jTextArea1 = new JTextArea();
 		jTextArea1.setEditable(false);
 		jTextArea1.setColumns(25);
@@ -109,124 +109,17 @@ public class ClientChat extends JFrame
 		this.pack(); // 调节窗口为最适大小
 		this.setVisible(true); // 使界面可见
 
-		new GetUserListThread(this).start(); // 获取当前在线用户列表
-		
-		new ReceiveMsgThread(this).start(); // 建立接收消息线程
-		
-		this.addWindowListener(new WindowListener()
-		{
-			
-			@Override
-			public void windowOpened(WindowEvent e)
-			{
-				ClientChat.this.jTextField1.setFocusable(true);
-			}
-			
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				try
-				{
-					Socket socket = new Socket(CharacterUtil.SERVERHOST,ClientConnectionThread.serverPort2);
-					
-					OutputStream os = socket.getOutputStream();
-					
-					String quitInfo = "quit" + "@" + title;
-					
-					os.write(quitInfo.getBytes());
-					
-					os.close();
-					
-					socket.close();
-					
-				}
-				catch (Exception e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		
-		
-
 		jButton1.addActionListener(new ActionListener() // Send
 		{
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				String content = jTextField1.getText();
-
-				String msg = "<" + title + ">" + " :\n" + content + "\n\n";
-
-				if (CharacterUtil.isEmpty(content))
-				{
-					JOptionPane.showMessageDialog(ClientChat.this,
-							"Sent message is empty.Write something.",
-							"Warning", JOptionPane.WARNING_MESSAGE);
-
-					jTextField1.setText("");
-
-					jTextField1.requestFocus();
-
-					return;
-				}
-
-				try
-				{
-						
-						
-						new SendMsgThread(msg).start(); // 建立发送消息的线程
-
-				}
-				catch (Exception e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
+				sendMessage(e);
 			}
 		});
 
+		
 		jButton2.addActionListener(new ActionListener() // Clear
 		{
 
@@ -236,6 +129,103 @@ public class ClientChat extends JFrame
 				jTextField1.setText("");
 			}
 		});
+		
+		this.addWindowListener(new WindowListener()
+		{
+			
+			@Override
+			public void windowOpened(WindowEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				closeWindow(e);
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 	}
+	
+	private void sendMessage(ActionEvent event)
+	{
+		//从jTextFiled1中获取户聊天数据
+		String content = jTextField1.getText();
+		//判断发送消息是否为空，为空警告
+		if (CharacterUtil.isEmpty(content))
+		{
+			JOptionPane.showMessageDialog(ClientChat.this,
+					"Sent message is empty.Write something.", "Warning",
+					JOptionPane.WARNING_MESSAGE);
+
+			jTextField1.setText("");
+
+			jTextField1.requestFocus();
+
+			return;
+		}
+		//最终传输的消息内容为message
+		String message = "<" + title + ">" + " :\n" + content + "\n\n";		
+		
+		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_MSG);
+	}
+	
+	private void closeWindow(WindowEvent e)
+	{
+		String message = "true";
+		
+		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_MSG);
+	}
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

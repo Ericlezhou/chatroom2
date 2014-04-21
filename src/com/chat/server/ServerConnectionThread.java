@@ -50,12 +50,11 @@ public class ServerConnectionThread extends Thread
 		{
 			e.printStackTrace();
 
-			JOptionPane.showMessageDialog(this.server,
-					"This port has been used.Please change.", "Warning",
-					JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this.server, "This port has been used.Please change.",
+					"Warning", JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -72,12 +71,10 @@ public class ServerConnectionThread extends Thread
 				int len = is.read(buffer);
 
 				// 客户端发来的连接信息（包括用户名）
-				String loginXML = new String(buffer, 0, len); // zhoule@@@4567_2345_127.0.0.1
+				String loginXML = new String(buffer, 0, len);
 				// 从客户端发来的连接信息解析出用户名
 				String userName = XMLUtil.extractUsername(loginXML);
-				//设置登陆成功与否的标记
-				boolean isLogin = false;
-				
+				// 设置登陆成功与否的标记
 				String isLoginResult = null;
 
 				if (this.server.getMap().containsKey(userName))
@@ -87,25 +84,21 @@ public class ServerConnectionThread extends Thread
 				else
 				{
 					isLoginResult = CharacterUtil.SUCCESS;
-
-					isLogin = true;
 				}
-				//生成是否登陆成功的xml信息格式 并返回字符串的形式
-				String isLoginXML = XMLUtil
-						.constructIsLoginResultXML(isLoginResult);
-				//将上述生成的xml字符串信息发给客户端
+				// 生成是否登陆成功的xml信息格式 并返回字符串的形式
+				String isLoginXML = XMLUtil.constructIsLoginResultXML(isLoginResult);
+				// 将上述生成的xml字符串信息发给客户端
 				os.write(isLoginXML.getBytes());
-				//构建子线程用来处理客户端与服务器之间的消息传输
+				// 构建子线程用来处理客户端与服务器之间的消息传输
 				ServerMsgThread serverMsgThread = new ServerMsgThread(server, socket);
-				//将用户名，以及该用户对应的子线程保存到servre维护的map当中
+				// 将用户名，以及该用户对应的子线程保存到servre维护的map当中
 				server.getMap().put(userName, serverMsgThread);
-				//更新客户端的用户列表
+				// 更新客户端的用户列表
 				serverMsgThread.updateUserList();
-				
-				serverMsgThread.start();
-				
-				
-				
+
+				//
+
+				// serverMsgThread.start();
 
 			}
 

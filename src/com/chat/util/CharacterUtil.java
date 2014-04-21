@@ -1,8 +1,5 @@
 package com.chat.util;
 
-import java.awt.Color;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 //import java.util.regex.Pattern;
@@ -12,8 +9,16 @@ public class CharacterUtil
 	public static final String ERROR = "ERROR";
 
 	public static final String SUCCESS = "SUCESS";
-	
+
 	public static final String FALSE = "FALSE";
+
+	public static final int LOGIN = 2;
+
+	public static final int USER_LIST = 3;
+	
+	public static final int USER_MSG = 4;
+	
+	public static final int USER_CLOSEWINDOW = 5;
 
 	public static int PORT1 = randomPort();
 
@@ -22,11 +27,10 @@ public class CharacterUtil
 	public static int randomPort1 = randomPort();
 
 	public static int randomPort2 = randomPort();
-	
+
 	public static String SERVERHOST;
-	
+
 	public static int SERVERPORT;
-	
 
 	/*
 	 * 判断给定的字符串是否为空，若为空，则返回true
@@ -99,7 +103,5 @@ public class CharacterUtil
 	{
 		return (int) (Math.random() * 50000 + 1025);
 	}
-	
 
-	
 }

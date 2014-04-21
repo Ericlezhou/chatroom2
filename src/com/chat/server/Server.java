@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 
 import com.chat.util.CharacterUtil;
 
+@SuppressWarnings("serial")
 public class Server extends JFrame
 {
 	private JLabel jLabel1;
@@ -39,13 +40,13 @@ public class Server extends JFrame
 
 	private JButton jButton1;
 
-	private Map<String, ServerMsgThread>map = new HashMap<String, ServerMsgThread>();
-	
+	private Map<String, ServerMsgThread> map = new HashMap<String, ServerMsgThread>();
+
 	public JTextArea getjTextArea1()
 	{
 		return jTextArea1;
 	}
-	
+
 	public JButton getjButton1()
 	{
 		return jButton1;
@@ -61,12 +62,12 @@ public class Server extends JFrame
 		return jLabel2;
 	}
 
-	public Map getMap()
+	public Map<String, ServerMsgThread> getMap()
 	{
 		return map;
 	}
 
-	public void setMap(Map map)
+	public void setMap(Map<String, ServerMsgThread> map)
 	{
 		this.map = map;
 	}
@@ -82,7 +83,7 @@ public class Server extends JFrame
 	{
 		map.remove(key);
 	}
-	
+
 	private void initComponents()
 	{
 		jLabel1 = new JLabel();
@@ -105,7 +106,7 @@ public class Server extends JFrame
 		jLabel2.setForeground(Color.red);
 		jLabel3.setForeground(Color.blue);
 		jLabel3.setText("Port");
-//test: the port is always 5000.
+		// test: the port is always 5000.
 		jTextField1.setText("5000");
 
 		jButton1.setText("Start The Server");
@@ -179,8 +180,7 @@ public class Server extends JFrame
 
 		if (!CharacterUtil.isPositiveInteger(hostPort))
 		{
-			JOptionPane.showMessageDialog(this,
-					"You should input a positive Integer.", "Warning",
+			JOptionPane.showMessageDialog(this, "You should input a positive Integer.", "Warning",
 					JOptionPane.WARNING_MESSAGE);
 
 			this.jTextField1.setText("");
@@ -192,8 +192,7 @@ public class Server extends JFrame
 
 		if (!CharacterUtil.isLegalPort(hostPort))
 		{
-			JOptionPane.showMessageDialog(this,
-					"You should input the number between 1024~65535.",
+			JOptionPane.showMessageDialog(this, "You should input the number between 1024~65535.",
 					"Warning", JOptionPane.WARNING_MESSAGE);
 
 			this.jTextField1.setText("");
@@ -203,11 +202,10 @@ public class Server extends JFrame
 			return;
 		}
 
-		ServerConnectionThread serverCon = new ServerConnectionThread(this,
-				"ConnetThread", Integer.parseInt(hostPort));
+		ServerConnectionThread serverCon = new ServerConnectionThread(this, "ConnetThread",
+				Integer.parseInt(hostPort));
 		serverCon.start();
-		
-		
+
 	}
 
 	public static void main(String[] args)

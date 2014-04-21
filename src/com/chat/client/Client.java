@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.chat.server.Server;
 import com.chat.util.CharacterUtil;
 
 @SuppressWarnings("serial")
@@ -117,8 +116,8 @@ public class Client extends JFrame
 		// usrName
 		if (CharacterUtil.isEmpty(userName))
 		{
-			JOptionPane.showMessageDialog(this, "Username is not null.",
-					"Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Username is not null.", "Warning",
+					JOptionPane.WARNING_MESSAGE);
 			this.jTextField1.setText("");
 			this.jTextField1.requestFocus();
 			return;
@@ -126,8 +125,7 @@ public class Client extends JFrame
 
 		if (!CharacterUtil.isLegalName(userName))
 		{
-			JOptionPane.showMessageDialog(this,
-					"首尾字符必须是字母或者数字，中间不得出现\\和@，长度为5～14之间", "Warning",
+			JOptionPane.showMessageDialog(this, "首尾字符必须是字母或者数字，中间不得出现\\和@，长度为5～14之间", "Warning",
 					JOptionPane.WARNING_MESSAGE);
 			this.jTextField1.setText("");
 			this.jTextField1.requestFocus();
@@ -137,8 +135,8 @@ public class Client extends JFrame
 		// IPAddress
 		if (CharacterUtil.isEmpty(ipAddress))
 		{
-			JOptionPane.showMessageDialog(this, "IP Address is not null.",
-					"Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "IP Address is not null.", "Warning",
+					JOptionPane.WARNING_MESSAGE);
 			this.jTextField2.setText("");
 			this.jTextField2.requestFocus();
 			return;
@@ -146,8 +144,8 @@ public class Client extends JFrame
 
 		if (!CharacterUtil.isLegalIPAddress(ipAddress))
 		{
-			JOptionPane.showMessageDialog(this, "IP Address is not legal.",
-					"Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "IP Address is not legal.", "Warning",
+					JOptionPane.WARNING_MESSAGE);
 			this.jTextField2.setText("");
 			this.jTextField2.requestFocus();
 			return;
@@ -156,8 +154,8 @@ public class Client extends JFrame
 		// HostPort
 		if (CharacterUtil.isEmpty(hostPort))
 		{
-			JOptionPane.showMessageDialog(this, "HoostPort is not null.",
-					"Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "HoostPort is not null.", "Warning",
+					JOptionPane.WARNING_MESSAGE);
 			this.jTextField3.setText("");
 			this.jTextField3.requestFocus();
 			return;
@@ -165,18 +163,16 @@ public class Client extends JFrame
 
 		if (!CharacterUtil.isPositiveInteger(hostPort))
 		{
-			JOptionPane.showMessageDialog(this,
-					"You should input a positive Integer.", "Warning",
+			JOptionPane.showMessageDialog(this, "You should input a positive Integer.", "Warning",
 					JOptionPane.WARNING_MESSAGE);
 			this.jTextField3.setText("");
 			this.jTextField3.requestFocus();
 			return;
 		}
 
-		if (!CharacterUtil.isLegalPort(hostPort))  
+		if (!CharacterUtil.isLegalPort(hostPort))
 		{
-			JOptionPane.showMessageDialog(this,
-					"You should input the number between 1024~65535.",
+			JOptionPane.showMessageDialog(this, "You should input the number between 1024~65535.",
 					"Warning", JOptionPane.WARNING_MESSAGE);
 			this.jTextField3.setText("");
 			this.jTextField3.requestFocus();
@@ -184,8 +180,8 @@ public class Client extends JFrame
 		}
 		// 结束，所有输入信息都合法
 
-		ClientConnectionThread clientCon = new ClientConnectionThread(this,
-				ipAddress, hostPort, userName);
+		ClientConnectionThread clientCon = new ClientConnectionThread(this, ipAddress,
+				Integer.parseInt(hostPort), userName);
 		clientCon.start();
 	}
 
