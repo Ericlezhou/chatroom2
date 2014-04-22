@@ -23,8 +23,8 @@ public class ServerConnectionThread extends Thread
 	private JLabel jLabelToChange;
 
 	private JButton jButtonToChange;
-	
-	private JTextField jTextFieldToChange ;
+
+	private JTextField jTextFieldToChange;
 
 	private InputStream is;
 
@@ -47,7 +47,7 @@ public class ServerConnectionThread extends Thread
 
 			jButtonToChange = server.getjButton1();
 			jButtonToChange.setVisible(false);
-			
+
 			jTextFieldToChange = server.getjTextField1();
 			jTextFieldToChange.setEditable(false);
 
@@ -56,8 +56,9 @@ public class ServerConnectionThread extends Thread
 		{
 			e.printStackTrace();
 
-			JOptionPane.showMessageDialog(this.server, "This port has been used.Please change.",
-					"Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this.server,
+					"This port has been used.Please change.", "Warning",
+					JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -92,19 +93,19 @@ public class ServerConnectionThread extends Thread
 					isLoginResult = CharacterUtil.SUCCESS;
 				}
 				// 生成是否登陆成功的xml信息格式 并返回字符串的形式
-				String isLoginXML = XMLUtil.constructIsLoginResultXML(isLoginResult);
+				String isLoginXML = XMLUtil
+						.constructIsLoginResultXML(isLoginResult);
 				// 将上述生成的xml字符串信息发给客户端
 				os.write(isLoginXML.getBytes());
 				// 构建子线程用来处理客户端与服务器之间的消息传输
-				ServerMsgThread serverMsgThread = new ServerMsgThread(server, socket);
+				ServerMsgThread serverMsgThread = new ServerMsgThread(server,
+						socket, userName);
 				// 将用户名，以及该用户对应的子线程保存到servre维护的map当中
 				server.getMap().put(userName, serverMsgThread);
 				// 更新客户端的用户列表
 				serverMsgThread.updateUserList();
 
-				//
-
-				 serverMsgThread.start();
+				serverMsgThread.start();
 
 			}
 

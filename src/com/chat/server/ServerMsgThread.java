@@ -18,10 +18,14 @@ public class ServerMsgThread extends Thread
 	private InputStream is;
 
 	private OutputStream os;
+	
+	private String userName;
 
-	public ServerMsgThread(Server server, Socket socket)
+	public ServerMsgThread(Server server, Socket socket, String userName)
 	{
 		this.server = server;
+		
+		this.userName = userName;
 
 		try
 		{
@@ -108,7 +112,9 @@ public class ServerMsgThread extends Thread
 				}
 				else if(type == CharacterUtil.USER_CLOSEWINDOW)
 				{
+					server.getMap().remove(userName);
 					updateUserList();
+					break;
 				}
 			}
 		}

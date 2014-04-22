@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import com.chat.util.CharacterUtil;
 import com.chat.util.XMLUtil;
 
@@ -147,6 +149,12 @@ public class ClientConnectionThread extends Thread
 				else if(type == CharacterUtil.USER_MSG)
 				{
 					this.clientChat.updateMessageBox(XMLUtil.extractChatMsg(xml));
+				}
+				else if(type == CharacterUtil.SERVER_CLOSEWINDOW)
+				{
+					JOptionPane.showMessageDialog(this.clientChat, "Server has been closed.", "Warn", JOptionPane.WARNING_MESSAGE);
+					
+					System.exit(0);
 				}
 			}
 		}
