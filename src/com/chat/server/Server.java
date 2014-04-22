@@ -164,25 +164,36 @@ public class Server extends JFrame
 				} // 注意此处execute()是非static的，所以使用this代表当前类的一个实例
 			}
 		});
-		
+
 		this.addWindowListener(new WindowAdapter()
 		{
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
-				Collection<ServerMsgThread> collection = Server.this.getMap().values();
-				
-				String xml = XMLUtil.constructServerCloseWindowXML();
-				
-				for(ServerMsgThread smt : collection)
+				try
 				{
-					smt.sendMsg(xml);
+					Collection<ServerMsgThread> collection = Server.this.getMap().values();
+
+					String xml = XMLUtil.constructServerCloseWindowXML();
+
+					for (ServerMsgThread smt : collection)
+					{
+						smt.sendMsg(xml);
+					}
 				}
-				
+				catch (Exception e1)
+				{
+					e1.printStackTrace();
+				}
+				finally
+				{
+
+					System.exit(0);
+				}
 			}
 		});
 	}
-	
+
 	public JTextField getjTextField1()
 	{
 		return jTextField1;
@@ -236,7 +247,7 @@ public class Server extends JFrame
 
 	public static void main(String[] args)
 	{
-		Server server = new Server("server");
+		new Server("server");
 	}
 
 }

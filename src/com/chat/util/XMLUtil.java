@@ -116,7 +116,6 @@ public class XMLUtil
 		return document.asXML();
 
 	}
-	
 
 	// 提取服务端发往客户端用户列表的xml字符串
 
@@ -151,75 +150,85 @@ public class XMLUtil
 
 		return null;
 	}
-	
-	//构建聊天数据的xml，并返回字符串表示形式
+
+	// 构建聊天数据的xml，并返回字符串表示形式
 	public static String constructChatMsgXML(String msg)
 	{
 		Document document = XMLUtil.constructDocument();
-		
+
 		Element root = document.getRootElement();
-		
+
 		root.addElement("type").setText("4");
-		
+
 		root.addElement("msg").setText(msg);
-		
+
 		return document.asXML();
 	}
-	
-	//解析聊天数据的xml字符串
+
+	// 解析聊天数据的xml字符串
 	public static String extractChatMsg(String xml)
 	{
 		SAXReader saxReader = new SAXReader();
-		
+
 		try
 		{
 			Document document = saxReader.read(new StringReader(xml));
-			
+
 			Element root = document.getRootElement();
 
 			return root.element("msg").getText();
-			
+
 		}
 		catch (DocumentException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
-		
+
 	}
-	
-	//构建客户端关闭窗口的消息xml字符串形式
+
+	// 构建客户端关闭窗口的消息xml字符串形式
 	public static String constructClientCloseWindowXML(String msg)
 	{
 		Document document = XMLUtil.constructDocument();
-		
+
 		Element root = document.getRootElement();
-		
+
 		root.addElement("type").setText("5");
-		
+
 		root.addElement("closewindow").setText(msg);
-		
+
+		return document.asXML();
+	}
+
+	// 构建服务端关闭窗口的消息xml字符串形式
+	public static String constructServerCloseWindowXML()
+	{
+		Document document = XMLUtil.constructDocument();
+
+		Element root = document.getRootElement();
+
+		root.addElement("type").setText("6");
+
 		return document.asXML();
 	}
 	
-	//构建服务端关闭窗口的消息xml字符串形式
-		public static String constructServerCloseWindowXML()
+	// 构建客户端关闭窗口确认的消息xml字符串形式
+		public static String constructConfirmClientExitXML()
 		{
 			Document document = XMLUtil.constructDocument();
-			
+
 			Element root = document.getRootElement();
-			
-			root.addElement("type").setText("6");
-			
+
+			root.addElement("type").setText("7");
+
 			return document.asXML();
 		}
 	
 	
-	
-	
-	
+
 	// 获取xml的type值
 	public static String getTypeFromXML(String xml)
 	{

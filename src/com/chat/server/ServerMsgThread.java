@@ -18,13 +18,13 @@ public class ServerMsgThread extends Thread
 	private InputStream is;
 
 	private OutputStream os;
-	
-	private String userName;
+
+	private String userName; 
 
 	public ServerMsgThread(Server server, Socket socket, String userName)
 	{
 		this.server = server;
-		
+
 		this.userName = userName;
 
 		try
@@ -66,7 +66,7 @@ public class ServerMsgThread extends Thread
 		}
 	}
 
-	//更新客户端聊天box内容
+	// 更新客户端聊天box内容
 	public void updateChatBox(String xml)
 	{
 		Collection<ServerMsgThread> collection = this.server.getMap().values();
@@ -76,7 +76,7 @@ public class ServerMsgThread extends Thread
 			smt.sendMsg(xml);
 		}
 	}
-	
+
 	public void sendMsg(String msg)
 	{
 		try
@@ -89,6 +89,7 @@ public class ServerMsgThread extends Thread
 		}
 	}
 
+
 	@Override
 	public void run()
 	{
@@ -97,24 +98,34 @@ public class ServerMsgThread extends Thread
 			while (true)
 			{
 				byte[] buf = new byte[1024];
-				
+
 				int len = is.read(buf);
-				
+
 				String xml = new String(buf, 0, len);
-				
+
 				System.out.println(xml);
-				
+
 				int type = Integer.parseInt(XMLUtil.getTypeFromXML(xml));
-				
-				if(type == CharacterUtil.USER_MSG)
+
+				if (type == CharacterUtil.USER_MSG)
 				{
 					updateChatBox(xml);
 				}
-				else if(type == CharacterUtil.USER_CLOSEWINDOW)
+				else if (type == CharacterUtil.USER_CLOSE_WINDOW)
 				{
+					
+					String xml1 = XMLUtil.constructConfirmClientExitXML();
+					
+					server.getMap().get(userName).sendMsg(xml1);
+					
 					server.getMap().remove(userName);
+					
 					updateUserList();
-					break;
+					
+					this.is.close();  //关闭输入流
+					this.os.close();	//关闭输出流
+					
+					break;   //关闭该线程
 				}
 			}
 		}

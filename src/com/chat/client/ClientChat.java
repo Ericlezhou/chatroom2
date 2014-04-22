@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,19 +44,18 @@ public class ClientChat extends JFrame
 		this.clientConnectionThread = clientConnectionThread;
 		initComponents();
 	}
-	
-	//更新用户列表
+
+	// 更新用户列表
 	public void updateUserList(String usersList)
 	{
 		this.jTextArea2.setText(usersList);
 	}
-	
-	//更新聊天内容
+
+	// 更新聊天内容
 	public void updateMessageBox(String msg)
 	{
 		this.jTextArea1.append(msg);
 	}
-	
 
 	public void appendMsg(String msg)
 	{
@@ -128,7 +126,6 @@ public class ClientChat extends JFrame
 			}
 		});
 
-		
 		jButton2.addActionListener(new ActionListener() // Clear
 		{
 
@@ -138,7 +135,7 @@ public class ClientChat extends JFrame
 				jTextField1.setText("");
 			}
 		});
-		
+
 		this.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -149,14 +146,15 @@ public class ClientChat extends JFrame
 		});
 
 	}
-	//向客户端发送聊天消息
+
+	// 向客户端发送聊天消息
 	private void sendMessage(ActionEvent event)
 	{
-		//从jTextFiled1中获取户聊天数据
+		// 从jTextFiled1中获取户聊天数据
 		String content = jTextField1.getText();
-		
+
 		jTextField1.setText("");
-		//判断发送消息是否为空，为空警告
+		// 判断发送消息是否为空，为空警告
 		if (CharacterUtil.isEmpty(content))
 		{
 			JOptionPane.showMessageDialog(ClientChat.this,
@@ -169,34 +167,27 @@ public class ClientChat extends JFrame
 
 			return;
 		}
-		//最终传输的消息内容为message
-		String message = title + ">>>" + "\n" + content + "\n";		
-		
+		// 最终传输的消息内容为message
+		String message = title + ">>>" + "\n" + content + "\n";
+
 		System.out.println(message);
-		
+
 		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_MSG);
 	}
-	//向客户端发送关闭窗口消息
+
+	// 向服务端发送关闭窗口消息
 	private void closeWindow(WindowEvent e)
 	{
-		String message = "userclose";
+		try
+		{
+			String message = "userclose";
+
+			this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_CLOSE_WINDOW);
+		}
+		catch (Exception e1)
+		{
+			e1.printStackTrace();
+		}
 		
-		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_CLOSEWINDOW);
 	}
-	 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

@@ -1,3 +1,4 @@
+
 package com.chat.client;
 
 import java.awt.event.ActionEvent;
@@ -19,7 +20,7 @@ public class Client extends JFrame
 	private JPanel jPanel;
 
 	private JLabel jLabel1;
-	private JLabel jLabel2;
+	private JLabel jLabel2; 
 	private JLabel jLabel3;
 
 	private JTextField jTextField1;

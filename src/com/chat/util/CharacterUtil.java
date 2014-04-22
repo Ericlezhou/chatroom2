@@ -15,12 +15,14 @@ public class CharacterUtil
 	public static final int LOGIN = 2;
 
 	public static final int USER_LIST = 3;
-	
+
 	public static final int USER_MSG = 4;
-	
-	public static final int USER_CLOSEWINDOW = 5;
-	
-	public static final int SERVER_CLOSEWINDOW = 6;
+
+	public static final int USER_CLOSE_WINDOW = 5;
+
+	public static final int SERVER_CLOSE_WINDOW = 6;
+
+	public static final int CONFIRM_EXIT = 7;
 
 	public static int PORT1 = randomPort();
 

@@ -13,6 +13,11 @@ import com.chat.util.XMLUtil;
 public class ClientConnectionThread extends Thread
 {
 	private Socket socket;
+	public Socket getSocket()
+	{
+		return socket;
+	}
+
 	private Client client;
 	private String ipAddress;
 	private int hostPort;
@@ -95,9 +100,9 @@ public class ClientConnectionThread extends Thread
 		if (type == CharacterUtil.USER_MSG)
 		{
 			String xml = XMLUtil.constructChatMsgXML(msg);
-			
+
 			System.out.println(xml);
-			
+
 			try
 			{
 				os.write(xml.getBytes());
@@ -108,7 +113,7 @@ public class ClientConnectionThread extends Thread
 				e.printStackTrace();
 			}
 		}
-		else if (type == CharacterUtil.USER_CLOSEWINDOW)
+		else if (type == CharacterUtil.USER_CLOSE_WINDOW)
 		{
 			String xml = XMLUtil.constructClientCloseWindowXML(msg);
 
@@ -146,15 +151,34 @@ public class ClientConnectionThread extends Thread
 				{
 					this.clientChat.updateUserList(XMLUtil.extractUserList(xml));
 				}
-				else if(type == CharacterUtil.USER_MSG)
+				else if (type == CharacterUtil.USER_MSG)
 				{
 					this.clientChat.updateMessageBox(XMLUtil.extractChatMsg(xml));
 				}
-				else if(type == CharacterUtil.SERVER_CLOSEWINDOW)
+				else if (type == CharacterUtil.SERVER_CLOSE_WINDOW)
 				{
-					JOptionPane.showMessageDialog(this.clientChat, "Server has been closed.", "Warn", JOptionPane.WARNING_MESSAGE);
-					
-					System.exit(0);
+					JOptionPane.showMessageDialog(this.clientChat, "Server has been closed.",
+							"Warn", JOptionPane.WARNING_MESSAGE);
+
+					System.exit(0); 
+				}
+				else if(type == CharacterUtil.CONFIRM_EXIT) 
+				{
+					System.out.println("sasasasasasaaaaaaaaaaaaa");
+					try
+					{
+						this.is.close();    //关闭clientConnectionThread的输入流
+						this.os.close();	//关闭clientConnectionThread的输出流
+						this.socket.close();					//关闭socket对象
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+					finally
+					{
+						System.exit(0);
+					}
 				}
 			}
 		}
