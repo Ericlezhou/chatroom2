@@ -9,6 +9,7 @@ import java.net.Socket;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import com.chat.util.CharacterUtil;
 import com.chat.util.XMLUtil;
@@ -22,6 +23,8 @@ public class ServerConnectionThread extends Thread
 	private JLabel jLabelToChange;
 
 	private JButton jButtonToChange;
+	
+	private JTextField jTextFieldToChange ;
 
 	private InputStream is;
 
@@ -44,6 +47,9 @@ public class ServerConnectionThread extends Thread
 
 			jButtonToChange = server.getjButton1();
 			jButtonToChange.setVisible(false);
+			
+			jTextFieldToChange = server.getjTextField1();
+			jTextFieldToChange.setEditable(false);
 
 		}
 		catch (Exception e)
@@ -98,7 +104,7 @@ public class ServerConnectionThread extends Thread
 
 				//
 
-				// serverMsgThread.start();
+				 serverMsgThread.start();
 
 			}
 

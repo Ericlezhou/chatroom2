@@ -166,6 +166,29 @@ public class XMLUtil
 		return document.asXML();
 	}
 	
+	//解析聊天数据的xml字符串
+	public static String extractChatMsg(String xml)
+	{
+		SAXReader saxReader = new SAXReader();
+		
+		try
+		{
+			Document document = saxReader.read(new StringReader(xml));
+			
+			Element root = document.getRootElement();
+
+			return root.element("msg").getText();
+			
+		}
+		catch (DocumentException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
 	
 	//构建客户端关闭窗口的消息xml字符串形式
 	public static String constructClientCloseWindowXML(String msg)
@@ -180,6 +203,19 @@ public class XMLUtil
 		
 		return document.asXML();
 	}
+	
+	//构建服务端关闭窗口的消息xml字符串形式
+		public static String constructServerCloseWindowXML()
+		{
+			Document document = XMLUtil.constructDocument();
+			
+			Element root = document.getRootElement();
+			
+			root.addElement("type").setText("6");
+			
+			return document.asXML();
+		}
+	
 	
 	
 	

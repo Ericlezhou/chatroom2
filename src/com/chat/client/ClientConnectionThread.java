@@ -68,7 +68,6 @@ public class ClientConnectionThread extends Thread
 			int length = is.read(buf); // 读取服务器回应的消息
 
 			String response = new String(buf, 0, length);
-			System.out.println(response);
 
 			String isLogin = XMLUtil.extractIsLoginResult(response);
 
@@ -94,7 +93,9 @@ public class ClientConnectionThread extends Thread
 		if (type == CharacterUtil.USER_MSG)
 		{
 			String xml = XMLUtil.constructChatMsgXML(msg);
-
+			
+			System.out.println(xml);
+			
 			try
 			{
 				os.write(xml.getBytes());
@@ -145,9 +146,8 @@ public class ClientConnectionThread extends Thread
 				}
 				else if(type == CharacterUtil.USER_MSG)
 				{
-					this.clientChat.updateMessageBox(XML)
+					this.clientChat.updateMessageBox(XMLUtil.extractChatMsg(xml));
 				}
-
 			}
 		}
 		catch (Exception e)

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -44,11 +45,19 @@ public class ClientChat extends JFrame
 		this.clientConnectionThread = clientConnectionThread;
 		initComponents();
 	}
-
+	
+	//更新用户列表
 	public void updateUserList(String usersList)
 	{
 		this.jTextArea2.setText(usersList);
 	}
+	
+	//更新聊天内容
+	public void updateMessageBox(String msg)
+	{
+		this.jTextArea1.append(msg);
+	}
+	
 
 	public void appendMsg(String msg)
 	{
@@ -130,64 +139,23 @@ public class ClientChat extends JFrame
 			}
 		});
 		
-		this.addWindowListener(new WindowListener()
+		this.addWindowListener(new WindowAdapter()
 		{
-			
-			@Override
-			public void windowOpened(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowIconified(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeiconified(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowDeactivated(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
 				closeWindow(e);
 			}
-			
-			@Override
-			public void windowClosed(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowActivated(WindowEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
 		});
 
 	}
-	
+	//向客户端发送聊天消息
 	private void sendMessage(ActionEvent event)
 	{
 		//从jTextFiled1中获取户聊天数据
 		String content = jTextField1.getText();
+		
+		jTextField1.setText("");
 		//判断发送消息是否为空，为空警告
 		if (CharacterUtil.isEmpty(content))
 		{
@@ -202,18 +170,21 @@ public class ClientChat extends JFrame
 			return;
 		}
 		//最终传输的消息内容为message
-		String message = "<" + title + ">" + " :\n" + content + "\n\n";		
+		String message = title + ">>>" + "\n" + content + "\n";		
+		
+		System.out.println(message);
 		
 		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_MSG);
 	}
-	
+	//向客户端发送关闭窗口消息
 	private void closeWindow(WindowEvent e)
 	{
-		String message = "true";
+		String message = "userclose";
 		
-		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_MSG);
+		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_CLOSEWINDOW);
 	}
 	 
+	
 	
 	
 	

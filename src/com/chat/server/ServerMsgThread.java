@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Collection;
 import java.util.Set;
 
+import com.chat.util.CharacterUtil;
 import com.chat.util.XMLUtil;
 
 public class ServerMsgThread extends Thread
@@ -61,6 +62,17 @@ public class ServerMsgThread extends Thread
 		}
 	}
 
+	//更新客户端聊天box内容
+	public void updateChatBox(String xml)
+	{
+		Collection<ServerMsgThread> collection = this.server.getMap().values();
+
+		for (ServerMsgThread smt : collection)
+		{
+			smt.sendMsg(xml);
+		}
+	}
+	
 	public void sendMsg(String msg)
 	{
 		try
@@ -80,7 +92,24 @@ public class ServerMsgThread extends Thread
 		{
 			while (true)
 			{
-
+				byte[] buf = new byte[1024];
+				
+				int len = is.read(buf);
+				
+				String xml = new String(buf, 0, len);
+				
+				System.out.println(xml);
+				
+				int type = Integer.parseInt(XMLUtil.getTypeFromXML(xml));
+				
+				if(type == CharacterUtil.USER_MSG)
+				{
+					updateChatBox(xml);
+				}
+				else if(type == CharacterUtil.USER_CLOSEWINDOW)
+				{
+					updateUserList();
+				}
 			}
 		}
 		catch (Exception e)

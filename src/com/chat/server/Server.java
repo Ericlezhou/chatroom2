@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.chat.util.CharacterUtil;
+import com.chat.util.XMLUtil;
 
 @SuppressWarnings("serial")
 public class Server extends JFrame
@@ -160,6 +164,28 @@ public class Server extends JFrame
 				} // 注意此处execute()是非static的，所以使用this代表当前类的一个实例
 			}
 		});
+		
+		this.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				Collection<ServerMsgThread> collection = Server.this.getMap().values();
+				
+				String xml = XMLUtil.constructServerCloseWindowXML();
+				
+				for(ServerMsgThread smt : collection)
+				{
+					smt.sendMsg(xml);
+				}
+				
+			}
+		});
+	}
+	
+	public JTextField getjTextField1()
+	{
+		return jTextField1;
 	}
 
 	private void execute() throws NumberFormatException, Exception
