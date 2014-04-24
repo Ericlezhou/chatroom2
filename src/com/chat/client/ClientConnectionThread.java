@@ -84,6 +84,11 @@ public class ClientConnectionThread extends Thread
 
 				this.clientChat = new ClientChat(this);
 			}
+			else
+			{
+				JOptionPane.showMessageDialog(client, "Login failure!", "Warning", JOptionPane.WARNING_MESSAGE);
+				System.exit(0);
+			}
 
 		}
 		catch (Exception e)
@@ -100,8 +105,6 @@ public class ClientConnectionThread extends Thread
 		if (type == CharacterUtil.USER_MSG)
 		{
 			String xml = XMLUtil.constructChatMsgXML(msg);
-
-			System.out.println(xml);
 
 			try
 			{
@@ -164,7 +167,6 @@ public class ClientConnectionThread extends Thread
 				}
 				else if(type == CharacterUtil.CONFIRM_EXIT) 
 				{
-					System.out.println("sasasasasasaaaaaaaaaaaaa");
 					try
 					{
 						this.is.close();    //关闭clientConnectionThread的输入流

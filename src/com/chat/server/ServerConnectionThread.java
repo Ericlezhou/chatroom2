@@ -16,7 +16,7 @@ import com.chat.util.XMLUtil;
 
 public class ServerConnectionThread extends Thread
 {
-	private ServerSocket serverSocket; 
+	private ServerSocket serverSocket;
 
 	private Socket socket;
 
@@ -95,15 +95,18 @@ public class ServerConnectionThread extends Thread
 				String isLoginXML = XMLUtil.constructIsLoginResultXML(isLoginResult);
 				// 将上述生成的xml字符串信息发给客户端
 				os.write(isLoginXML.getBytes());
-				// 构建子线程用来处理客户端与服务器之间的消息传输
-				ServerMsgThread serverMsgThread = new ServerMsgThread(server, socket, userName);
-				// 将用户名，以及该用户对应的子线程保存到servre维护的map当中
-				server.getMap().put(userName, serverMsgThread);
-				// 更新客户端的用户列表
-				serverMsgThread.updateUserList();
+				
+				if (isLoginResult == CharacterUtil.SUCCESS)
+				{
+					// 构建子线程用来处理客户端与服务器之间的消息传输
+					ServerMsgThread serverMsgThread = new ServerMsgThread(server, socket, userName);
+					// 将用户名，以及该用户对应的子线程保存到servre维护的map当中
+					server.getMap().put(userName, serverMsgThread);
+					// 更新客户端的用户列表
+					serverMsgThread.updateUserList();
 
-				serverMsgThread.start();
-
+					serverMsgThread.start();
+				}
 			}
 
 			catch (Exception e)

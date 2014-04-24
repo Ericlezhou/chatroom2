@@ -103,8 +103,6 @@ public class ServerMsgThread extends Thread
 
 				String xml = new String(buf, 0, len);
 
-				System.out.println(xml);
-
 				int type = Integer.parseInt(XMLUtil.getTypeFromXML(xml));
 
 				if (type == CharacterUtil.USER_MSG)

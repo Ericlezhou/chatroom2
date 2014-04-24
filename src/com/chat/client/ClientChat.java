@@ -170,8 +170,6 @@ public class ClientChat extends JFrame
 		// 最终传输的消息内容为message
 		String message = title + ">>>" + "\n" + content + "\n";
 
-		System.out.println(message);
-
 		this.clientConnectionThread.sendMessage(message, CharacterUtil.USER_MSG);
 	}
 
